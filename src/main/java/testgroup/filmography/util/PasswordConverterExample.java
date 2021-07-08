@@ -9,7 +9,7 @@ import static testgroup.filmography.util.Converter.getSHA;
 
 public class PasswordConverterExample {
     public static void main(String[] args) {
-        String userPassword = "user12345";
+        String userPassword = "12345";
         String adminPassword = "admin12345";
         String s2 = "TeachMeSkills";
         try
@@ -23,16 +23,20 @@ public class PasswordConverterExample {
             System.out.println("Exception thrown for incorrect algorithm: " + e);
         }
 
+        System.out.println("=================================================");
+
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedUserPassword = passwordEncoder.encode(userPassword);
+        String password = "12345678";
+        String password1 = "12345679";
+        String encodedUserPassword = passwordEncoder.encode(password);
         System.out.println();
-        System.out.println("UserPassword is : " + encodedUserPassword);
+        System.out.println("UserPassword is stored to DB : " + encodedUserPassword);
 
-        String encodedAdminPassword = passwordEncoder.encode(adminPassword);
-        System.out.println();
-        System.out.println("AdminPassword is : " + encodedAdminPassword);
+        //String encodedAdminPassword = passwordEncoder.encode(adminPassword);
+        //System.out.println();
+        //System.out.println("AdminPassword is : " + encodedAdminPassword);
 
-        boolean isEncodedS1Match = passwordEncoder.matches(userPassword,encodedUserPassword);
+        boolean isEncodedS1Match = passwordEncoder.matches(password,encodedUserPassword);
         System.out.println("S1 : " + userPassword + " isS1Matched :" + isEncodedS1Match);
     }
 }

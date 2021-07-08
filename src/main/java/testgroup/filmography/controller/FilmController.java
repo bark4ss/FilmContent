@@ -4,11 +4,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import testgroup.filmography.exception.FilmNotFoundException;
+import testgroup.filmography.exception.PageNotFoundException;
 import testgroup.filmography.model.Film;
 import testgroup.filmography.service.FilmService;
 
+import java.io.FileNotFoundException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
-
+//https://javastudy.ru/spring-mvc/spring-mvc-basic/
+//https://www.tutorialspoint.com/spring/spring_mvc_hello_world_example.htm
+//https://www.journaldev.com/14476/spring-mvc-example
+//https://www.youtube.com/watch?v=1vyf-_5OkW8
+//https://javarush.ru/groups/posts/1956-ot-hello-world-do-spring-web-mvc-i-pri-chjem-tut-servrletih
+//https://java-master.com/spring-mvc-%D0%BF%D0%B5%D1%80%D0%B2%D0%BE%D0%B5-%D0%B2%D0%B5%D0%B1-%D0%BF%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5/
+//https://javarush.ru/groups/posts/2253-znakomstvo-s-maven-spring-mysql-hibernate-i-pervoe-crud-prilozhenie-chastjh-1
 @Controller
 public class FilmController {
     private int page;
@@ -22,6 +33,12 @@ public class FilmController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView allFilms(@RequestParam(defaultValue = "1") int page) {
+        if(page == 16) {
+            throw new FilmNotFoundException(LocalTime.of(12,00), "midday", page);
+        }
+        if(page == 17) {
+            throw new PageNotFoundException(page);
+        }
         List<Film> films = filmService.allFilms(page);
         int filmsCount = filmService.filmsCount();
         int pagesCount = (filmsCount + 9)/10;
@@ -91,5 +108,15 @@ public class FilmController {
         Film film = filmService.getById(id);
         filmService.delete(film);
         return modelAndView;
+    }
+
+    @GetMapping("/test")
+    public void testHandler2 (@RequestParam int exc) {
+        if(exc == 1) {
+            throw new RuntimeException("runtime exception");
+        }
+        if(exc == 2) {
+            throw new FilmNotFoundException(LocalTime.now(), "film not found by id", exc);
+        }
     }
 }
